@@ -311,7 +311,7 @@ mergemove <- merge0419 %>% group_by(idmen) %>%
   #mutate(empchange=length(unique(empstat)))
 #nrow(mergefinal %>% filter(prochange >1|empchange > 1) %>%
        #mutate(move_TF=ifelse(year==datent,1,0))%>%
-       #filter(move_TF==1)%>%
+       #filter(move_TF==1 & year==2019)%>%
   #group_by(idmen)%>% summarise(COUNT = n()))
 #Consider two years as a period, i.e. (2004,2005), (2005,2006)¡Ke.t.c
 #Case1:We include the condition: NA x (some number) as a change.
@@ -328,7 +328,8 @@ for(i in 2004:2018){
   change[i-2003,2] <- nrow(subdata35_final %>% 
                       filter(prochange >1|empchange > 1) %>%
                       mutate(move_TF=ifelse(year==datent,1,0)) %>%
-                      filter(move_TF==1)%>%group_by(idmen)%>% 
+                      filter(move_TF==1 & year==i+1)%>%
+                        group_by(idmen)%>% 
                         summarise(COUNT = n()))
 }
 change[,1] <- c(2005:2019)
@@ -350,7 +351,7 @@ for (i in 2004:2018) {
     mutate(nc=profession[2]-profession[1],
            np=empstat[2]-empstat[1])
   a1<-subset(a,nc!=0|np!=0)%>%
-    filter(move_TF==1)
+    filter(move_TF==1 & year==i+1)
   a1$idmen<-str_sub(a1$idmen, start = 1, end = 16)
   ncp[i-2003,2]<-n_distinct(a1$idmen)
 }
