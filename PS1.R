@@ -312,21 +312,48 @@ mergemove <- merge0419 %>% group_by(idmen) %>%
 #nrow(mergefinal %>% filter(prochange >1|empchange > 1) %>%
        #mutate(move_TF=ifelse(year==datent,1,0))%>%
        #filter(move_TF==1)%>%
-  group_by(idmen)%>% summarise(COUNT = n()))
-#Case 2, I change the period to (2004,2005),(2005,2006),...
+  #group_by(idmen)%>% summarise(COUNT = n()))
+#Consider two years as a period, i.e. (2004,2005), (2005,2006)¡Ke.t.c
+#Case1:We include the condition: NA x (some number) as a change.
+#Prochange=1 indicates an individual has the same profession during
+#two years, but it can be (x,x) or (NA,NA).
+#In other words, Prochange=2 indicates an individual changes his/her
+#profession, and it can be (x,y) where x is not equal to y or (x,NA)
 change <- matrix(data=NA,15,2)
 for(i in 2004:2018){
   subdata35 <- subset(merge0419,year==i|year==i+1)
   subdata35_final <- subdata35 %>% group_by(idind)%>% 
     mutate(prochange=length(unique(profession)))%>% 
     mutate(empchange=length(unique(empstat)))
-  change[i-2003,2] <- nrow(subdata35_final %>% filter(prochange >1|empchange > 1) %>%
+  change[i-2003,2] <- nrow(subdata35_final %>% 
+                      filter(prochange >1|empchange > 1) %>%
                       mutate(move_TF=ifelse(year==datent,1,0)) %>%
                       filter(move_TF==1)%>%group_by(idmen)%>% 
                         summarise(COUNT = n()))
 }
 change[,1] <- c(2005:2019)
 change
+#Case2: We don¡¦t include the condition: NA x (some number) as a change. 
+#Obviously, the number in Case 2 will be lower. 
+#Different from the approach I adopt in Case1, case 2 considers the
+#difference between two professions number or empstat.
+ncp<-matrix(nrow=15,ncol=2)
+ncp[1:15,1]<-2005:2019
+for (i in 2004:2018) {
+  data35<-subset(merge0419,year==i|year==i+1)
+  data35$empstat<-as.factor(data35$empstat)
+  data35$empstat<-as.numeric(data35$empstat)
+  data35$profession<-as.factor(data35$profession)
+  data35$profession<-as.numeric(data35$profession)
+  a<-data35 %>% mutate(move_TF=ifelse(year==datent,1,0)) %>%
+    group_by(idind) %>% 
+    mutate(nc=profession[2]-profession[1],
+           np=empstat[2]-empstat[1])
+  a1<-subset(a,nc!=0|np!=0)%>%
+    filter(move_TF==1)
+  a1$idmen<-str_sub(a1$idmen, start = 1, end = 16)
+  ncp[i-2003,2]<-n_distinct(a1$idmen)
+}
 #Exercise4
 #Compute the attrition across each year, where attrition is defined as
 #the reduction in the number of individuals staying in the data panel. 
