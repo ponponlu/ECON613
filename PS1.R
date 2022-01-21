@@ -73,10 +73,10 @@ Gini <- function (x, corr = FALSE, na.rm = TRUE)
   x <- as.numeric(na.omit(x))
   n <- length(x)
   x <- sort(x)
-  G <- sum(x * 1L:n)
-  G <- 2 * G/sum(x) - (n + 1L)
+  G <- sum(x * 1:n)
+  G <- 2 * G/sum(x) - (n + 1)
   if (corr) 
-    G/(n - 1L)
+    G/(n - 1)
   else G/n
 }
 Gini(datind2005$wage)
@@ -312,7 +312,7 @@ mergemove <- merge0419 %>% group_by(idmen) %>%
 #nrow(mergefinal %>% filter(prochange >1|empchange > 1) %>%
        #mutate(move_TF=ifelse(year==datent,1,0))%>%
        #filter(move_TF==1)%>%
-  #group_by(idmen)%>% summarise(COUNT = n()))
+  group_by(idmen)%>% summarise(COUNT = n()))
 #Case 2, I change the period to (2004,2005),(2005,2006),...
 change <- matrix(data=NA,15,2)
 for(i in 2004:2018){
