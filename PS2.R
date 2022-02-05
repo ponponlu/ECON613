@@ -264,9 +264,9 @@ out[which.min(like5_LPM),]
 #CHECK <- summary(plm(employed~age, data = datind0515_exclude, 
 #model = "within", index = "year"))
 #Part (ii) Probit model
-reg4_2 <- glm(employed~age+year_2006+year_2007+year_2008+year_2009+
-        year_2010+year_2011+year_2012+year_2013+year_2014+year_2015,
-          data=datind0515_exclude,family = binomial(link = "probit"))
+#reg4_2 <- glm(employed~age+year_2006+year_2007+year_2008+year_2009+
+        #year_2010+year_2011+year_2012+year_2013+year_2014+year_2015,
+          #data=datind0515_exclude,family = binomial(link = "probit"))
 flike5prob = function(par,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,yvar)
 {xbeta <- par[1]*x1 + par[2]*x2+par[3]*x3+par[4]*x4+par[5]*x5+
   par[6]*x6+par[7]*x7+par[8]*x8+par[9]*x9+par[10]*x10+par[11]*x11+
@@ -324,9 +324,9 @@ est_probit = cbind(res_probit$par,prop_sigma,zvalue,
             pvalue_probit=2*pnorm(-abs(zvalue)))
 est_probit
 #Part (iii) Logit model
-reg4_3 <- glm(employed~age+year_2006+year_2007+year_2008+year_2009+
-      year_2010+year_2011+year_2012+year_2013+year_2014+year_2015,
-    data=datind0515_exclude,family = binomial(link = "logit"))
+#reg4_3 <- glm(employed~age+year_2006+year_2007+year_2008+year_2009+
+      #year_2010+year_2011+year_2012+year_2013+year_2014+year_2015,
+    #data=datind0515_exclude,family = binomial(link = "logit"))
 flogit = function(par,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,yvar)
 {xbeta <- par[1]*x1 + par[2]*x2+par[3]*x3+par[4]*x4+par[5]*x5+
   par[6]*x6+par[7]*x7+par[8]*x8+par[9]*x9+par[10]*x10+par[11]*x11+
